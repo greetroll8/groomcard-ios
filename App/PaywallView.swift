@@ -76,23 +76,23 @@ struct PaywallView: View {
     /// Headline varies by what the groomer was trying to do (spec 9.4).
     private var headline: String {
         switch trigger {
-        case .petLimit: return "Add unlimited pets"
-        case .pdfExport: return "Share client documents"
-        case .consentPDF: return "Sign & share consent PDFs"
-        case .backup: return "Keep your work backed up"
+        case .petLimit: return String(localized: "Add unlimited pets")
+        case .pdfExport: return String(localized: "Share client documents")
+        case .consentPDF: return String(localized: "Sign & share consent PDFs")
+        case .backup: return String(localized: "Keep your work backed up")
         }
     }
 
     private var subhead: String {
         switch trigger {
         case .petLimit:
-            return "Free plan limited to \(store.freeLimit) pets. Upgrade to keep adding pets to your book."
+            return String(localized: "Free plan limited to \(store.freeLimit) pets. Upgrade to keep adding pets to your book.")
         case .pdfExport:
-            return "Generate grooming-report PDFs and income CSV exports to hand to every owner."
+            return String(localized: "Generate grooming-report PDFs and income CSV exports to hand to every owner.")
         case .consentPDF:
-            return "Turn signed consents into shareable PDFs with the signature, date and text version."
+            return String(localized: "Turn signed consents into shareable PDFs with the signature, date and text version.")
         case .backup:
-            return "iCloud backup is coming in a future update so your cards are never lost."
+            return String(localized: "iCloud backup is coming in a future update so your cards are never lost.")
         }
     }
 
@@ -298,9 +298,9 @@ struct PaywallView: View {
 
     private func planTitle(_ product: Product) -> String {
         if !product.displayName.isEmpty { return product.displayName }
-        if product.id.hasSuffix("monthly") { return "Monthly" }
-        if product.id.hasSuffix("yearly") { return "Yearly" }
-        if product.id.hasSuffix("lifetime") { return "Lifetime" }
+        if product.id.hasSuffix("monthly") { return String(localized: "Monthly") }
+        if product.id.hasSuffix("yearly") { return String(localized: "Yearly") }
+        if product.id.hasSuffix("lifetime") { return String(localized: "Lifetime") }
         return product.id
     }
 
@@ -308,10 +308,10 @@ struct PaywallView: View {
         var label = product.displayPrice
         if let unit = product.subscription?.subscriptionPeriod.unit {
             switch unit {
-            case .day: label += " / day"
-            case .week: label += " / week"
-            case .month: label += " / mo"
-            case .year: label += " / yr"
+            case .day: label += String(localized: " / day")
+            case .week: label += String(localized: " / week")
+            case .month: label += String(localized: " / mo")
+            case .year: label += String(localized: " / yr")
             @unknown default: break
             }
         }
@@ -333,7 +333,7 @@ struct PaywallView: View {
             }
         } catch {
             products = []
-            message = "Could not load plans. \(error.localizedDescription)"
+            message = String(localized: "Could not load plans. \(error.localizedDescription)")
         }
         isLoadingProducts = false
     }
@@ -351,20 +351,20 @@ struct PaywallView: View {
                 case .verified(let transaction):
                     await transaction.finish()
                     await store.refreshProEntitlement()
-                    message = "Purchase complete."
+                    message = String(localized: "Purchase complete.")
                     dismiss()
                 case .unverified:
-                    message = "Purchase could not be verified."
+                    message = String(localized: "Purchase could not be verified.")
                 }
             case .userCancelled:
                 break
             case .pending:
-                message = "Purchase is pending approval."
+                message = String(localized: "Purchase is pending approval.")
             @unknown default:
                 break
             }
         } catch {
-            message = "Purchase failed. \(error.localizedDescription)"
+            message = String(localized: "Purchase failed. \(error.localizedDescription)")
         }
     }
 
@@ -379,10 +379,10 @@ struct PaywallView: View {
         }
         await store.refreshProEntitlement()
         if store.isPro {
-            message = "Purchases restored."
+            message = String(localized: "Purchases restored.")
             dismiss()
         } else {
-            message = "No purchases found to restore."
+            message = String(localized: "No purchases found to restore.")
         }
     }
 }

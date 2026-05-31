@@ -94,9 +94,9 @@ struct PetDetailView: View {
         let breed = current.breed.trimmingCharacters(in: .whitespacesAndNewlines)
         let coat = current.coatType.rawValue
         if breed.isEmpty {
-            return "\(current.species.rawValue) \u{00B7} \(coat) coat"
+            return String(localized: "\(current.species.rawValue) \u{00B7} \(coat) coat")
         }
-        return "\(breed) \u{00B7} \(coat) coat"
+        return String(localized: "\(breed) \u{00B7} \(coat) coat")
     }
 
     @ViewBuilder

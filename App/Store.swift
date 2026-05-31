@@ -241,7 +241,7 @@ final class GroomStore: ObservableObject {
     @discardableResult
     func add(_ pet: Pet) -> Bool {
         guard !isOverFreeLimit else {
-            saveError = "Free plan is limited to \(freeLimit) pets. Upgrade to add more."
+            saveError = String(localized: "Free plan is limited to \(freeLimit) pets. Upgrade to add more.")
             return false
         }
         pets.insert(pet, at: 0)

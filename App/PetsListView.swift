@@ -104,9 +104,9 @@ private struct PetRow: View {
     private var subtitle: String {
         let breed = pet.breed.trimmingCharacters(in: .whitespacesAndNewlines)
         if breed.isEmpty {
-            return pet.species.rawValue
+            return String(localized: "\(pet.species.rawValue)")
         }
-        return "\(pet.species.rawValue) · \(breed)"
+        return String(localized: "\(pet.species.rawValue) · \(breed)")
     }
 }
 

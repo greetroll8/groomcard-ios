@@ -107,7 +107,7 @@ struct PetEditView: View {
                     if UIImagePickerController.isSourceTypeAvailable(.camera) {
                         showingCamera = true
                     } else {
-                        errorMessage = "Camera is unavailable on this device."
+                        errorMessage = String(localized: "Camera is unavailable on this device.")
                     }
                 } label: {
                     PhotoActionTile(
@@ -205,12 +205,12 @@ struct PetEditView: View {
 
     private func save() {
         guard let ownerId else {
-            errorMessage = "Select an owner first."
+            errorMessage = String(localized: "Select an owner first.")
             return
         }
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else {
-            errorMessage = "Name is required."
+            errorMessage = String(localized: "Name is required.")
             return
         }
 
@@ -231,7 +231,7 @@ struct PetEditView: View {
 
         if existingPet == nil {
             guard store.add(pet) else {
-                errorMessage = store.saveError ?? "Unable to add pet."
+                errorMessage = store.saveError ?? String(localized: "Unable to add pet.")
                 return
             }
         } else {

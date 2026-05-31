@@ -231,23 +231,23 @@ struct SessionPaywallSheet: View {
 
     private var headline: String {
         switch trigger {
-        case .petLimit: return "Add unlimited pets"
-        case .pdfExport: return "Share PDF reports"
-        case .consentPDF: return "Sign consent as PDF"
-        case .backup: return "Back up your data"
+        case .petLimit: return String(localized: "Add unlimited pets")
+        case .pdfExport: return String(localized: "Share PDF reports")
+        case .consentPDF: return String(localized: "Sign consent as PDF")
+        case .backup: return String(localized: "Back up your data")
         }
     }
 
     private var subhead: String {
         switch trigger {
         case .petLimit:
-            return "You've reached the free pet limit. Upgrade to keep adding pet profiles."
+            return String(localized: "You've reached the free pet limit. Upgrade to keep adding pet profiles.")
         case .pdfExport:
-            return "Generate polished before/after grooming reports to hand to owners."
+            return String(localized: "Generate polished before/after grooming reports to hand to owners.")
         case .consentPDF:
-            return "Export signed consent forms as PDF for your records and the owner."
+            return String(localized: "Export signed consent forms as PDF for your records and the owner.")
         case .backup:
-            return "Keep a safe copy of every pet, session, and consent."
+            return String(localized: "Keep a safe copy of every pet, session, and consent.")
         }
     }
 }
