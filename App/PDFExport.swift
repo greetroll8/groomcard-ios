@@ -34,6 +34,13 @@ enum PDFExport {
         let reportNumber = store.nextReportNumber()
         let business = store.settings.businessInfo
 
+        // Resolve all store-dependent data on the main actor BEFORE entering the
+        // nonisolated PDF render closure, then capture only plain values
+        // (UIImages, value structs) into it. The render closure runs synchronously
+        // in a nonisolated context, so it must not touch the @MainActor store.
+        let beforeImages = Self.loadImages(store: store, ids: session.beforePhotoIds)
+        let afterImages = Self.loadImages(store: store, ids: session.afterPhotoIds)
+
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
         let url = tempURL(prefix: "GroomingReport")
 
@@ -62,9 +69,7 @@ enum PDFExport {
             }
             pen.gap(8)
 
-            // Before / after photos.
-            let beforeImages = images(store: store, ids: session.beforePhotoIds)
-            let afterImages = images(store: store, ids: session.afterPhotoIds)
+            // Before / after photos (resolved above on the main actor).
             if !beforeImages.isEmpty || !afterImages.isEmpty {
                 pen.heading("Before / After")
                 drawPhotoRow(before: beforeImages.first, after: afterImages.first, pen: &pen)
@@ -115,6 +120,10 @@ enum PDFExport {
         let consentNumber = store.nextConsentNumber()
         let business = store.settings.businessInfo
 
+        // Resolve the signature image on the main actor before the render closure
+        // (which is nonisolated) so the closure never touches the @MainActor store.
+        let signatureImage = ImageStore.load(fileName: store.photo(id: consent.signaturePhotoId)?.fileName)
+
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
         let url = tempURL(prefix: "Consent")
 
@@ -153,9 +162,9 @@ enum PDFExport {
             }
             pen.gap(10)
 
-            // Signature.
+            // Signature (resolved above on the main actor).
             pen.heading("Signature")
-            if let sig = ImageStore.load(fileName: store.photo(id: consent.signaturePhotoId)?.fileName) {
+            if let sig = signatureImage {
                 drawSignature(sig, pen: &pen)
             } else {
                 pen.body("(unsigned)", color: dangerColor)
@@ -199,7 +208,11 @@ enum PDFExport {
         "\(pet.name) (\(pet.species.rawValue))"
     }
 
-    private static func images(store: GroomStore, ids: [UUID]) -> [UIImage] {
+    /// Resolves PhotoAsset ids to loaded UIImages. Marked @MainActor because it
+    /// reads the main-actor store; callers invoke it on the main actor before
+    /// handing the plain UIImages to the nonisolated render closure.
+    @MainActor
+    private static func loadImages(store: GroomStore, ids: [UUID]) -> [UIImage] {
         ids.compactMap { ImageStore.load(fileName: store.photo(id: $0)?.fileName) }
     }
 
