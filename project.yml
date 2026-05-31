@@ -1,0 +1,35 @@
+name: GroomCard
+options:
+  bundleIdPrefix: com.greetroll8
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: 5.10
+    DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+    VERSIONING_SYSTEM: apple-generic
+targets:
+  GroomCard:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.greetroll8.groomcard
+        PRODUCT_NAME: GroomCard
+        INFOPLIST_FILE: App/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: 1
+schemes:
+  GroomCard:
+    build:
+      targets:
+        GroomCard: all
+    run:
+      config: Debug
+    archive:
+      config: Release
